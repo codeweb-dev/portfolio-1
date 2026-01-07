@@ -3,6 +3,7 @@ import { allPosts } from "content-collections";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { paginate, normalizePage } from "@/lib/pagination";
+import { ChevronRight } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Blog",
@@ -46,7 +47,7 @@ export default async function BlogPage({
   return (
     <section id="blog">
       <BlurFade delay={BLUR_FADE_DELAY}>
-        <h1 className="text-2xl font-semibold tracking-tight mb-2">Blog <span className="bg-card border border-border rounded-md px-2 py-1 text-muted-foreground text-sm">{sortedPosts.length} posts</span></h1>
+        <h1 className="text-2xl font-semibold tracking-tight mb-2">Blog <span className="ml-1 bg-card border border-border rounded-md px-2 py-1 text-muted-foreground text-sm">{sortedPosts.length} posts</span></h1>
         <p className="text-sm text-muted-foreground mb-8">
           My thoughts on software development, life, and more.
         </p>
@@ -69,8 +70,14 @@ export default async function BlogPage({
                         {String(indexNumber).padStart(2, "0")}.
                       </span>
                       <div className="flex flex-col gap-y-2 flex-1">
-                        <p className="tracking-tight group-hover:text-foreground transition-colors group-hover:underline underline-offset-4 text-lg font-medium">
-                          {post.title}
+                        <p className="tracking-tight text-lg font-medium">
+                          <span className="group-hover:text-foreground transition-colors">
+                            {post.title}
+                            <ChevronRight
+                              className="ml-1 inline-block size-4 stroke-3 text-muted-foreground opacity-0 -translate-x-2 transition-all duration-200 group-hover:opacity-100 group-hover:translate-x-0"
+                              aria-hidden
+                            />
+                          </span>
                         </p>
                         <p className="text-xs text-muted-foreground">
                           {post.publishedAt}

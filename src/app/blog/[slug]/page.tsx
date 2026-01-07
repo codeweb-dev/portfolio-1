@@ -122,22 +122,30 @@ export default async function Blog({
           __html: jsonLdContent,
         }}
       />
-      <Link href="/blog" className="text-sm text-muted-foreground hover:text-foreground transition-colors border border-border rounded-lg px-2 py-1 inline-flex items-center gap-1 mb-4 group" aria-label="Back to Blog">
-        <ChevronLeft className="size-3 group-hover:-translate-x-px transition-transform" />
-        Back to Blog
-      </Link>
-      <div className="flex flex-col gap-2">
+      <div className="flex justify-start gap-4 items-center">
+        <Link href="/blog" className="text-sm text-muted-foreground hover:text-foreground transition-colors border border-border rounded-lg px-2 py-1 inline-flex items-center gap-1 mb-4 group" aria-label="Back to Blog">
+          <ChevronLeft className="size-3 group-hover:-translate-x-px transition-transform" />
+          Back to Blog
+        </Link>
+      </div>
+      <div className="flex flex-col gap-4">
         <h1 className="title font-semibold text-3xl md:text-4xl tracking-tight">
           {post.title}
         </h1>
-        <p className="font-medium text-muted-foreground">
-          {post.summary}
-        </p>
-      </div>
-      <div className="flex justify-between items-center mt-4 mb-8">
-        <p className="text-sm text-muted-foreground h-7 w-fit px-2 border border-border rounded flex items-center justify-center">
+        <p className="text-sm text-muted-foreground">
           {formatDate(post.publishedAt)}
         </p>
+      </div>
+      <div className="my-6 flex w-full items-center">
+        <div
+          className="flex-1 h-px bg-border"
+          style={{
+            maskImage:
+              "linear-gradient(90deg, transparent, black 8%, black 92%, transparent)",
+            WebkitMaskImage:
+              "linear-gradient(90deg, transparent, black 8%, black 92%, transparent)",
+          }}
+        />
       </div>
       <article className="prose max-w-full text-pretty font-sans leading-relaxed text-muted-foreground dark:prose-invert">
         <MDXContent code={post.mdx} components={mdxComponents} />
