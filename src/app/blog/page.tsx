@@ -4,6 +4,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { paginate, normalizePage } from "@/lib/pagination";
 import { ChevronRight } from "lucide-react";
+import { SmoothCursor } from "@/components/ui/smooth-cursor";
 
 export const metadata: Metadata = {
   title: "Blog",
@@ -45,9 +46,16 @@ export default async function BlogPage({
   });
 
   return (
-    <section id="blog">
+    <section id="blog" className="cursor-none">
+      <SmoothCursor />
+
       <BlurFade delay={BLUR_FADE_DELAY}>
-        <h1 className="text-2xl font-semibold tracking-tight mb-2">Blog <span className="ml-1 bg-card border border-border rounded-md px-2 py-1 text-muted-foreground text-sm">{sortedPosts.length} posts</span></h1>
+        <h1 className="text-2xl font-semibold tracking-tight mb-2">
+          Blog{" "}
+          <span className="ml-1 bg-card border border-border rounded-md px-2 py-1 text-muted-foreground text-sm">
+            {sortedPosts.length} posts
+          </span>
+        </h1>
         <p className="text-sm text-muted-foreground mb-8">
           My thoughts on software development, life, and more.
         </p>
@@ -66,7 +74,7 @@ export default async function BlogPage({
                       className="flex items-start gap-x-2 group cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                       href={`/blog/${slug}`}
                     >
-                      <span className="text-xs font-mono tabular-nums font-medium mt-[5px]">
+                      <span className="text-xs font-mono tabular-nums font-medium mt-1.25">
                         {String(indexNumber).padStart(2, "0")}.
                       </span>
                       <div className="flex flex-col gap-y-2 flex-1">

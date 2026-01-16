@@ -11,8 +11,9 @@ import ProjectsSection from "@/components/section/projects-section";
 import WorkSection from "@/components/section/work-section";
 import { ArrowUpRight } from "lucide-react";
 import { SmoothCursor } from "@/components/ui/smooth-cursor";
-import { AnimatedThemeToggler } from "@/components/ui/animated-theme-toggler";
-import { Button } from "@/components/ui/button";
+import { InteractiveHoverButton } from "@/components/ui/interactive-hover-button";
+import { FeedbackSection } from "@/components/section/feedback-section";
+import { SpinningText } from "@/components/ui/spinning-text";
 
 const BLUR_FADE_DELAY = 0.04;
 
@@ -36,18 +37,23 @@ export default function Page() {
                 delay={BLUR_FADE_DELAY}
                 text={DATA.description}
               />
-
-              {/* <BlurFade delay={BLUR_FADE_DELAY} className="order-1 md:order-2">
-                <Button variant="outline" size="icon">
-                  <AnimatedThemeToggler duration={800} />
-                </Button>
-              </BlurFade> */}
+              <BlurFade delay={BLUR_FADE_DELAY}>
+                <InteractiveHoverButton>
+                  Let’s Work Together
+                </InteractiveHoverButton>
+              </BlurFade>
             </div>
             <BlurFade delay={BLUR_FADE_DELAY} className="order-1 md:order-2">
-              <Avatar className="size-24 md:size-32 border rounded-full shadow-lg ring-4 ring-muted bg-auto">
-                <AvatarImage alt={DATA.name} src={DATA.avatarUrl} />
-                <AvatarFallback>{DATA.initials}</AvatarFallback>
-              </Avatar>
+              <div className="relative flex items-center justify-center">
+                <SpinningText className="absolute top-11 md:top-14 text-base md:text-xl">
+                  learn more • earn more • grow more •
+                </SpinningText>
+
+                <Avatar className="relative z-10 size-22 md:size-28 rounded-full">
+                  <AvatarImage alt={DATA.name} src={DATA.avatarUrl} />
+                  <AvatarFallback>{DATA.initials}</AvatarFallback>
+                </Avatar>
+              </div>
             </BlurFade>
           </div>
         </div>
@@ -64,7 +70,31 @@ export default function Page() {
           </BlurFade>
         </div>
       </section>
-      <section id="work">
+      <section id="skills">
+        <div className="flex min-h-0 flex-col gap-y-4">
+          <BlurFade delay={BLUR_FADE_DELAY * 9}>
+            <h2 className="text-xl font-bold">Skills</h2>
+          </BlurFade>
+          <div className="flex flex-wrap gap-2">
+            {DATA.skills.map((skill, id) => (
+              <BlurFade
+                key={skill.name}
+                delay={BLUR_FADE_DELAY * 10 + id * 0.05}
+              >
+                <div className="border bg-background border-border ring-2 ring-border/20 rounded-xl h-8 w-fit px-4 flex items-center gap-2">
+                  {skill.icon && (
+                    <skill.icon className="size-4 rounded overflow-hidden object-contain" />
+                  )}
+                  <span className="text-foreground text-sm font-medium">
+                    {skill.name}
+                  </span>
+                </div>
+              </BlurFade>
+            ))}
+          </div>
+        </div>
+      </section>
+      {/* <section id="work">
         <div className="flex min-h-0 flex-col gap-y-6">
           <BlurFade delay={BLUR_FADE_DELAY * 5}>
             <h2 className="text-xl font-bold">Work Experience</h2>
@@ -73,7 +103,7 @@ export default function Page() {
             <WorkSection />
           </BlurFade>
         </div>
-      </section>
+      </section> */}
       <section id="education">
         <div className="flex min-h-0 flex-col gap-y-6">
           <BlurFade delay={BLUR_FADE_DELAY * 7}>
@@ -125,40 +155,21 @@ export default function Page() {
           </div>
         </div>
       </section>
-      <section id="skills">
-        <div className="flex min-h-0 flex-col gap-y-4">
-          <BlurFade delay={BLUR_FADE_DELAY * 9}>
-            <h2 className="text-xl font-bold">Skills</h2>
-          </BlurFade>
-          <div className="flex flex-wrap gap-2">
-            {DATA.skills.map((skill, id) => (
-              <BlurFade
-                key={skill.name}
-                delay={BLUR_FADE_DELAY * 10 + id * 0.05}
-              >
-                <div className="border bg-background border-border ring-2 ring-border/20 rounded-xl h-8 w-fit px-4 flex items-center gap-2">
-                  {skill.icon && (
-                    <skill.icon className="size-4 rounded overflow-hidden object-contain" />
-                  )}
-                  <span className="text-foreground text-sm font-medium">
-                    {skill.name}
-                  </span>
-                </div>
-              </BlurFade>
-            ))}
-          </div>
-        </div>
-      </section>
       <section id="projects">
         <BlurFade delay={BLUR_FADE_DELAY * 11}>
           <ProjectsSection />
         </BlurFade>
       </section>
-      <section id="hackathons">
+      <section id="feedback">
+        <BlurFade delay={BLUR_FADE_DELAY * 12}>
+          <FeedbackSection />
+        </BlurFade>
+      </section>
+      {/* <section id="hackathons">
         <BlurFade delay={BLUR_FADE_DELAY * 13}>
           <HackathonsSection />
         </BlurFade>
-      </section>
+      </section> */}
       <section id="contact">
         <BlurFade delay={BLUR_FADE_DELAY * 16}>
           <ContactSection />
