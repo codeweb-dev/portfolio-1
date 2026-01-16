@@ -1,40 +1,49 @@
 import { Icons } from "@/components/icons";
 import { HomeIcon, NotebookIcon } from "lucide-react";
 import { ReactLight } from "@/components/ui/svgs/reactLight";
-import { NextjsIconDark } from "@/components/ui/svgs/nextjsIconDark";
 import { Typescript } from "@/components/ui/svgs/typescript";
 import { Nodejs } from "@/components/ui/svgs/nodejs";
-import { Python } from "@/components/ui/svgs/python";
-import { Golang } from "@/components/ui/svgs/golang";
-import { Postgresql } from "@/components/ui/svgs/postgresql";
-import { Docker } from "@/components/ui/svgs/docker";
-import { Kubernetes } from "@/components/ui/svgs/kubernetes";
-import { Java } from "@/components/ui/svgs/java";
-import { Csharp } from "@/components/ui/svgs/csharp";
+import { Laravel } from "@/components/ui/svgs/laravel";
+import { Javascript } from "@/components/ui/svgs/javascript";
+import { Html } from "@/components/ui/svgs/html";
+import { Css } from "@/components/ui/svgs/css";
+import { TailwindCSS } from "@/components/ui/svgs/tailwind";
+import { Php } from "@/components/ui/svgs/php";
+import { Bootstrap } from "@/components/ui/svgs/bootstrap";
+import { Livewire } from "@/components/ui/svgs/livewire";
+import { Mysql } from "@/components/ui/svgs/mysql";
+import { Flutter } from "@/components/ui/svgs/flutter";
 
 export const DATA = {
-  name: "Dillion Verma",
-  initials: "DV",
+  name: "Allen Labrague",
+  initials: "AL",
   url: "https://dillion.io",
   location: "San Francisco, CA",
   locationLink: "https://www.google.com/maps/place/sanfrancisco",
   description:
-    "Software Engineer turned Entrepreneur. I love building things and helping people. Very active on Twitter.",
-  summary:
-    "At the end of 2022, I quit my job as a software engineer to go fulltime into building and scaling my own SaaS businesses. In the past, [I pursued a double degree in computer science and business](/#education), [interned at big tech companies in Silicon Valley](https://www.youtube.com/watch?v=d-LJ2e5qKdE), and [competed in over 21 hackathons for fun](/#hackathons). I also had the pleasure of being a part of the first ever in-person cohort of buildspace called [buildspace sf1](https://buildspace.so/sf1).",
-  avatarUrl: "/me.png",
+    "Computer Science student building web and mobile projects. Curious about new tech and collecting interesting things in my free time.",
+  summary: `I’m a third-year Computer Science student who has been actively working on
+  commission-based projects and business-driven applications alongside my studies.
+  Through building web and mobile solutions for real clients, I’ve gained hands-on
+  experience turning ideas and requirements into production-ready products.
+  My focus is on combining strong technical skills with business thinking,
+  continuous learning, and delivering real-world value.`,
+  avatarUrl: "/allen.png",
   skills: [
-    { name: "React", icon: ReactLight },
-    { name: "Next.js", icon: NextjsIconDark },
+    { name: "HTML", icon: Html },
+    { name: "CSS", icon: Css },
+    { name: "TailwindCSS", icon: TailwindCSS },
+    { name: "Bootstrap", icon: Bootstrap },
+    { name: "JavaScript", icon: Javascript },
     { name: "Typescript", icon: Typescript },
+    { name: "React", icon: ReactLight },
+    { name: "React Native", icon: ReactLight },
+    { name: "Flutter", icon: Flutter },
+    { name: "PHP", icon: Php },
+    { name: "Laravel", icon: Laravel },
+    { name: "Livewire", icon: Livewire },
     { name: "Node.js", icon: Nodejs },
-    { name: "Python", icon: Python },
-    { name: "Go", icon: Golang },
-    { name: "Postgres", icon: Postgresql },
-    { name: "Docker", icon: Docker },
-    { name: "Kubernetes", icon: Kubernetes },
-    { name: "Java", icon: Java },
-    { name: "C++", icon: Csharp },
+    { name: "MySQL", icon: Mysql },
   ],
   navbar: [
     { href: "/", icon: HomeIcon, label: "Home" },

@@ -1,5 +1,4 @@
 import { Dock, DockIcon } from "@/components/magicui/dock";
-import { ModeToggle } from "@/components/mode-toggle";
 import { Separator } from "@/components/ui/separator";
 import {
   Tooltip,
@@ -8,6 +7,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { DATA } from "@/data/resume";
+import { AnimatedThemeToggler } from "./ui/animated-theme-toggler";
 
 export default function Navbar() {
   return (
@@ -41,7 +41,7 @@ export default function Navbar() {
         })}
         <Separator
           orientation="vertical"
-          className="h-2/3 m-auto w-px bg-border"
+          className="h-2/4 m-auto w-px bg-border"
         />
         {Object.entries(DATA.contact.social)
           .filter(([_, social]) => social.navbar)
@@ -74,12 +74,12 @@ export default function Navbar() {
           })}
         <Separator
           orientation="vertical"
-          className="h-2/3 m-auto w-px bg-border"
+          className="h-2/4 m-auto w-px bg-border"
         />
         <Tooltip>
           <TooltipTrigger asChild>
             <DockIcon className="rounded-3xl cursor-pointer size-full bg-background p-0 text-muted-foreground hover:text-foreground hover:bg-muted backdrop-blur-3xl border border-border transition-colors">
-              <ModeToggle className="size-full cursor-pointer" />
+              <AnimatedThemeToggler duration={800} />
             </DockIcon>
           </TooltipTrigger>
           <TooltipContent
