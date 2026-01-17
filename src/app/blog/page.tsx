@@ -46,9 +46,7 @@ export default async function BlogPage({
   });
 
   return (
-    <section id="blog" className="cursor-none">
-      <SmoothCursor />
-
+    <section id="blog">
       <BlurFade delay={BLUR_FADE_DELAY}>
         <h1 className="text-2xl font-semibold tracking-tight mb-2">
           Blog{" "}

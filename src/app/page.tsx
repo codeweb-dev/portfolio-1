@@ -6,11 +6,8 @@ import { DATA } from "@/data/resume";
 import Link from "next/link";
 import Markdown from "react-markdown";
 import ContactSection from "@/components/section/contact-section";
-import HackathonsSection from "@/components/section/hackathons-section";
 import ProjectsSection from "@/components/section/projects-section";
-import WorkSection from "@/components/section/work-section";
 import { ArrowUpRight } from "lucide-react";
-import { SmoothCursor } from "@/components/ui/smooth-cursor";
 import { InteractiveHoverButton } from "@/components/ui/interactive-hover-button";
 import { FeedbackSection } from "@/components/section/feedback-section";
 import { SpinningText } from "@/components/ui/spinning-text";
@@ -19,9 +16,7 @@ const BLUR_FADE_DELAY = 0.04;
 
 export default function Page() {
   return (
-    <main className="min-h-dvh flex flex-col gap-14 relative cursor-none">
-      <SmoothCursor />
-
+    <main className="min-h-dvh flex flex-col gap-14 relative">
       <section id="hero">
         <div className="mx-auto w-full max-w-2xl space-y-8">
           <div className="gap-2 gap-y-6 flex flex-col md:flex-row justify-between">
@@ -38,9 +33,14 @@ export default function Page() {
                 text={DATA.description}
               />
               <BlurFade delay={BLUR_FADE_DELAY}>
-                <InteractiveHoverButton>
-                  Let’s Work Together
-                </InteractiveHoverButton>
+                <Link
+                  href="https://www.facebook.com/profile.php?id=61581024022869"
+                  target="_blank"
+                >
+                  <InteractiveHoverButton>
+                    Let’s Work Together
+                  </InteractiveHoverButton>
+                </Link>
               </BlurFade>
             </div>
             <BlurFade delay={BLUR_FADE_DELAY} className="order-1 md:order-2">

@@ -115,9 +115,7 @@ export default async function Blog({
   }).replace(/</g, "\\u003c");
 
   return (
-    <section id="blog" className="cursor-none">
-      <SmoothCursor />
-    
+    <section id="blog">
       <script
         type="application/ld+json"
         suppressHydrationWarning

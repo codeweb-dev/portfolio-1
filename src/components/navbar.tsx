@@ -79,8 +79,8 @@ export default function Navbar() {
         />
         <Tooltip>
           <TooltipTrigger asChild>
-            <DockIcon className="rounded-3xl cursor-pointer size-full bg-background p-0 text-muted-foreground hover:text-foreground hover:bg-muted backdrop-blur-3xl border border-border transition-colors">
-              <AnimatedThemeToggler duration={800} />
+            <DockIcon className="rounded-3xl size-full bg-background p-0 text-muted-foreground hover:text-foreground hover:bg-muted backdrop-blur-3xl border border-border transition-colors">
+              <AnimatedThemeToggler duration={800} className="cursor-pointer" />
             </DockIcon>
           </TooltipTrigger>
           <TooltipContent
