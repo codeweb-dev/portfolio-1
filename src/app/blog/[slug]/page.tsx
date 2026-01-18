@@ -7,7 +7,8 @@ import { MDXContent } from "@content-collections/mdx/react";
 import { mdxComponents } from "@/mdx-components";
 import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { SmoothCursor } from "@/components/ui/smooth-cursor";
+import { BlogHeader } from "@/components/blog-header";
+import { getReadingTime } from "@/lib/reading-time";
 
 function getSortedPosts() {
   return [...allPosts].sort((a, b) => {
@@ -33,7 +34,7 @@ export async function generateMetadata({
 }): Promise<Metadata | undefined> {
   const { slug } = await params;
   const post = allPosts.find(
-    (p) => p._meta.path.replace(/\.mdx$/, "") === slug
+    (p) => p._meta.path.replace(/\.mdx$/, "") === slug,
   );
 
   if (!post) {
@@ -80,7 +81,7 @@ export default async function Blog({
   const { slug } = await params;
   const sortedPosts = getSortedPosts();
   const currentIndex = sortedPosts.findIndex(
-    (p) => p._meta.path.replace(/\.mdx$/, "") === slug
+    (p) => p._meta.path.replace(/\.mdx$/, "") === slug,
   );
   const post = sortedPosts[currentIndex];
 
@@ -114,6 +115,8 @@ export default async function Blog({
     },
   }).replace(/</g, "\\u003c");
 
+  const readingTime = getReadingTime(post.mdx);
+
   return (
     <section id="blog">
       <script
@@ -133,14 +136,13 @@ export default async function Blog({
           Back to Blog
         </Link>
       </div>
-      <div className="flex flex-col gap-4">
-        <h1 className="title font-semibold text-3xl md:text-4xl tracking-tighter leading-tight">
-          {post.title}
-        </h1>
-        <p className="text-sm text-muted-foreground">
-          {formatDate(post.publishedAt)}
-        </p>
-      </div>
+      <BlogHeader
+        title={post.title}
+        publishedAt={post.publishedAt}
+        author={post.author}
+        image={post.image}
+        readingTime={readingTime}
+      />
       <div className="my-6 flex w-full items-center">
         <div
           className="flex-1 h-px bg-border"

@@ -7,10 +7,11 @@ import Link from "next/link";
 import Markdown from "react-markdown";
 import ContactSection from "@/components/section/contact-section";
 import ProjectsSection from "@/components/section/projects-section";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, Eye, Heart, Star } from "lucide-react";
 import { InteractiveHoverButton } from "@/components/ui/interactive-hover-button";
 import { FeedbackSection } from "@/components/section/feedback-section";
 import { SpinningText } from "@/components/ui/spinning-text";
+import { Badge } from "@/components/ui/badge";
 
 const BLUR_FADE_DELAY = 0.04;
 
@@ -21,6 +22,24 @@ export default function Page() {
         <div className="mx-auto w-full max-w-2xl space-y-8">
           <div className="gap-2 gap-y-6 flex flex-col md:flex-row justify-between">
             <div className="gap-2 flex flex-col order-2 md:order-1">
+              <BlurFade delay={BLUR_FADE_DELAY}>
+                <div className="flex items-center gap-2">
+                  <Badge variant="outline">
+                    <Eye className="size-3.5 mr-2" />
+                    23,000+ Profile Views
+                  </Badge>
+
+                  <Badge variant="outline">
+                    <Star className="size-3.5 mr-2" />
+                    4.5 Ratings
+                  </Badge>
+
+                  <Badge variant="outline">
+                    <Heart className="size-3.5 mr-2" />
+                    450
+                  </Badge>
+                </div>
+              </BlurFade>
               <BlurFadeText
                 delay={BLUR_FADE_DELAY}
                 className="text-3xl font-semibold tracking-tighter sm:text-4xl lg:text-5xl"

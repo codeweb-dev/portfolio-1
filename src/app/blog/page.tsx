@@ -4,7 +4,6 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { paginate, normalizePage } from "@/lib/pagination";
 import { ChevronRight } from "lucide-react";
-import { SmoothCursor } from "@/components/ui/smooth-cursor";
 
 export const metadata: Metadata = {
   title: "Blog",
