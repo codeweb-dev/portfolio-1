@@ -15,7 +15,30 @@ import { Badge } from "@/components/ui/badge";
 
 const BLUR_FADE_DELAY = 0.04;
 
-export default function Page() {
+async function registerView() {
+  await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/stats`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      slug: "home",
+      action: "view",
+    }),
+    cache: "no-store",
+  });
+}
+
+async function getStats(slug: string) {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_SITE_URL}/api/stats?slug=${slug}`,
+    { cache: "no-store" },
+  );
+  return res.json();
+}
+
+export default async function Page() {
+  await registerView();
+  const stats = await getStats("home");
+
   return (
     <main className="min-h-dvh flex flex-col gap-14 relative">
       <section id="hero">
@@ -26,7 +49,7 @@ export default function Page() {
                 <div className="flex flex-wrap items-center gap-2">
                   <Badge variant="outline">
                     <Eye className="size-3.5 mr-2" />
-                    23,000+ Profile Views
+                    {stats.views.toLocaleString()} Profile Views
                   </Badge>
 
                   <Badge variant="outline">
@@ -36,7 +59,7 @@ export default function Page() {
 
                   <Badge variant="outline">
                     <Heart className="size-3.5 mr-2" />
-                    450
+                    {stats.hearts}
                   </Badge>
                 </div>
               </BlurFade>
