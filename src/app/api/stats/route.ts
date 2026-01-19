@@ -1,37 +1,75 @@
 import { NextResponse } from "next/server";
 import dbConnect from "@/lib/mongodb";
 import PageStat from "@/models/PageStat";
+import { cookies } from "next/headers";
 
 export async function POST(req: Request) {
   const { slug, action } = await req.json();
   await dbConnect();
 
-  let update = {};
+  const cookieStore = await cookies();
 
-  switch (action) {
-    case "view":
-      update = { $inc: { views: 1 } };
-      break;
-    case "heart":
-      update = { $inc: { hearts: 1 } };
-      break;
-    case "unheart":
-      update = { $inc: { hearts: -1 } };
-      break;
-    // case "rate":
-    //   update = { $inc: { ratings: 1 } };
-    //   break;
-    default:
-      return NextResponse.json({ error: "Invalid action" }, { status: 400 });
+  /* 👀 VIEW (unchanged) */
+  if (action === "view") {
+    const viewed = cookieStore.get(`viewed_${slug}`);
+    if (viewed) return NextResponse.json({ skipped: true });
+
+    const stat = await PageStat.findOneAndUpdate(
+      { slug },
+      { $inc: { views: 1 } },
+      { upsert: true, new: true },
+    );
+
+    cookieStore.set(`viewed_${slug}`, "true", {
+      path: "/",
+      maxAge: 60 * 60 * 24,
+    });
+
+    return NextResponse.json({ views: stat.views });
   }
 
-  const stat = await PageStat.findOneAndUpdate(
-    { slug, hearts: { $gt: 0 } }, // prevent negative
-    update,
-    { upsert: true, new: true },
-  );
+  /* ❤️ HEART */
+  if (action === "heart") {
+    const hearted = cookieStore.get(`hearted_${slug}`);
+    if (hearted) {
+      const stat = await PageStat.findOne({ slug });
+      return NextResponse.json({ hearts: stat?.hearts ?? 0, skipped: true });
+    }
 
-  return NextResponse.json(stat);
+    const stat = await PageStat.findOneAndUpdate(
+      { slug },
+      { $inc: { hearts: 1 } },
+      { upsert: true, new: true },
+    );
+
+    cookieStore.set(`hearted_${slug}`, "true", {
+      path: "/",
+      maxAge: 60 * 60 * 24 * 365, // 1 year
+    });
+
+    return NextResponse.json({ hearts: stat.hearts });
+  }
+
+  /* 💔 UNHEART (optional – usually disabled) */
+  if (action === "unheart") {
+    const hearted = cookieStore.get(`hearted_${slug}`);
+    if (!hearted) {
+      const stat = await PageStat.findOne({ slug });
+      return NextResponse.json({ hearts: stat?.hearts ?? 0, skipped: true });
+    }
+
+    const stat = await PageStat.findOneAndUpdate(
+      { slug },
+      { $inc: { hearts: -1 } },
+      { new: true },
+    );
+
+    cookieStore.delete(`hearted_${slug}`);
+
+    return NextResponse.json({ hearts: Math.max(stat?.hearts ?? 0, 0) });
+  }
+
+  return NextResponse.json({ error: "Invalid action" }, { status: 400 });
 }
 
 export async function GET(req: Request) {
