@@ -42,37 +42,39 @@ export default function Navbar() {
         })}
         <Separator
           orientation="vertical"
-          className="h-2/4 m-auto w-px bg-border"
+          className="h-2/4 m-auto w-px bg-border hidden md:block"
         />
-        {Object.entries(DATA.contact.social)
-          .filter(([_, social]) => social.navbar)
-          .map(([name, social], index) => {
-            const isExternal = social.url.startsWith("http");
-            const IconComponent = social.icon;
-            return (
-              <Tooltip key={`social-${name}-${index}`}>
-                <TooltipTrigger asChild>
-                  <Link
-                    href={social.url}
-                    target={isExternal ? "_blank" : undefined}
-                    rel={isExternal ? "noopener noreferrer" : undefined}
+        <div className="hidden md:flex items-center gap-2">
+          {Object.entries(DATA.contact.social)
+            .filter(([_, social]) => social.navbar)
+            .map(([name, social], index) => {
+              const isExternal = social.url.startsWith("http");
+              const IconComponent = social.icon;
+              return (
+                <Tooltip key={`social-${name}-${index}`}>
+                  <TooltipTrigger asChild>
+                    <Link
+                      href={social.url}
+                      target={isExternal ? "_blank" : undefined}
+                      rel={isExternal ? "noopener noreferrer" : undefined}
+                    >
+                      <DockIcon className="rounded-3xl cursor-pointer size-full bg-background p-0 text-muted-foreground hover:text-foreground hover:bg-muted backdrop-blur-3xl border border-border transition-colors">
+                        <IconComponent className="size-full rounded-sm overflow-hidden object-contain" />
+                      </DockIcon>
+                    </Link>
+                  </TooltipTrigger>
+                  <TooltipContent
+                    side="top"
+                    sideOffset={8}
+                    className="rounded-xl bg-primary text-primary-foreground px-4 py-2 text-sm shadow-[0_10px_40px_-10px_rgba(0,0,0,0.3)] dark:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.5)]"
                   >
-                    <DockIcon className="rounded-3xl cursor-pointer size-full bg-background p-0 text-muted-foreground hover:text-foreground hover:bg-muted backdrop-blur-3xl border border-border transition-colors">
-                      <IconComponent className="size-full rounded-sm overflow-hidden object-contain" />
-                    </DockIcon>
-                  </Link>
-                </TooltipTrigger>
-                <TooltipContent
-                  side="top"
-                  sideOffset={8}
-                  className="rounded-xl bg-primary text-primary-foreground px-4 py-2 text-sm shadow-[0_10px_40px_-10px_rgba(0,0,0,0.3)] dark:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.5)]"
-                >
-                  <p>{name}</p>
-                  <TooltipArrow className="fill-primary" />
-                </TooltipContent>
-              </Tooltip>
-            );
-          })}
+                    <p>{name}</p>
+                    <TooltipArrow className="fill-primary" />
+                  </TooltipContent>
+                </Tooltip>
+              );
+            })}
+        </div>
         <Separator
           orientation="vertical"
           className="h-2/4 m-auto w-px bg-border"

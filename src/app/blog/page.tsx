@@ -3,7 +3,7 @@ import { allPosts } from "content-collections";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { paginate, normalizePage } from "@/lib/pagination";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, Eye, Heart } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
 export const metadata: Metadata = {
@@ -48,7 +48,20 @@ export default async function BlogPage({
   return (
     <section id="blog">
       <BlurFade delay={BLUR_FADE_DELAY}>
-        <h1 className="text-2xl font-semibold tracking-tight mb-2">
+        <div className="flex items-center gap-2">
+          <Badge variant="outline">
+            <Eye className="size-3.5 mr-2" />
+            23,000+ Blog Views
+          </Badge>
+
+          <Badge variant="outline">
+            <Heart className="size-3.5 mr-2" />
+            450
+          </Badge>
+        </div>
+      </BlurFade>
+      <BlurFade delay={BLUR_FADE_DELAY}>
+        <h1 className="text-2xl font-semibold tracking-tight mb-2 mt-3">
           Blog{" "}
           <span className="ml-1 bg-card border border-border rounded-md px-2 py-1 text-muted-foreground text-sm">
             {sortedPosts.length} posts
@@ -79,11 +92,13 @@ export default async function BlogPage({
                         <div className="tracking-tight text-lg font-medium">
                           <span className="group-hover:text-foreground transition-colors">
                             {post.title}
-                            {post.category && (
-                              <Badge variant="outline" className="ml-2">
-                                {post.category}
-                              </Badge>
-                            )}
+                            <div className="hidden md:inline">
+                              {post.category && (
+                                <Badge variant="outline" className="ml-2">
+                                  {post.category}
+                                </Badge>
+                              )}
+                            </div>
                             <ChevronRight
                               className="ml-1 inline-block size-4 stroke-3 text-muted-foreground opacity-0 -translate-x-2 transition-all duration-200 group-hover:opacity-100 group-hover:translate-x-0"
                               aria-hidden
