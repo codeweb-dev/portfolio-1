@@ -4,6 +4,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { paginate, normalizePage } from "@/lib/pagination";
 import { ChevronRight } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 
 export const metadata: Metadata = {
   title: "Blog",
@@ -75,15 +76,20 @@ export default async function BlogPage({
                         {String(indexNumber).padStart(2, "0")}.
                       </span>
                       <div className="flex flex-col gap-y-2 flex-1">
-                        <p className="tracking-tight text-lg font-medium">
+                        <div className="tracking-tight text-lg font-medium">
                           <span className="group-hover:text-foreground transition-colors">
                             {post.title}
+                            {post.category && (
+                              <Badge variant="outline" className="ml-2">
+                                {post.category}
+                              </Badge>
+                            )}
                             <ChevronRight
                               className="ml-1 inline-block size-4 stroke-3 text-muted-foreground opacity-0 -translate-x-2 transition-all duration-200 group-hover:opacity-100 group-hover:translate-x-0"
                               aria-hidden
                             />
                           </span>
-                        </p>
+                        </div>
                         <p className="text-xs text-muted-foreground">
                           {post.publishedAt}
                         </p>

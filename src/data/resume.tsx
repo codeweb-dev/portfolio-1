@@ -47,7 +47,6 @@ export const DATA = {
   navbar: [
     { href: "/", icon: HomeIcon, label: "Home" },
     { href: "/blog", icon: NotebookIcon, label: "Blog" },
-    { href: "/resume.pdf", icon: FileUser, label: "Resume" },
   ],
   contact: {
     email: "allenlabrague06@gmail.com",
