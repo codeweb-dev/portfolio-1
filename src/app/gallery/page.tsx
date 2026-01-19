@@ -154,6 +154,7 @@ export default function GalleryPage() {
                 <img
                   src={item.src}
                   alt={item.title}
+                  loading="lazy"
                   className="h-full w-full object-cover transition-transform duration-500 md:group-hover:scale-105"
                 />
 
@@ -194,7 +195,7 @@ export default function GalleryPage() {
         onOpenChange={() => setActiveIndex(null)}
       >
         {activeIndex !== null && (
-          <DialogContent className="w-full max-w-full md:w-auto md:max-w-[95vw] max-h-[95vh] p-0 overflow-hidden flex justify-center">
+          <DialogContent className="w-full max-w-full md:w-auto max-h-[95vh] p-0 overflow-hidden flex justify-center">
             <div className="flex flex-col min-h-0 md:inline-flex">
               <div className="relative flex justify-center md:inline-flex max-h-[75vh] overflow-hidden">
                 <Image
@@ -202,9 +203,8 @@ export default function GalleryPage() {
                   alt={filteredItems[activeIndex].title}
                   width={1600}
                   height={1000}
-                  sizes="(max-width: 768px) 100vw, 80vw"
+                  loading="lazy"
                   className="object-contain h-auto max-h-[75vh]"
-                  priority
                 />
               </div>
 
