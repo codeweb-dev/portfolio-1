@@ -150,24 +150,37 @@ export default function GalleryPage() {
               onClick={() => setActiveIndex(index)}
               className="group relative cursor-pointer overflow-hidden rounded-xl border bg-background shadow-sm"
             >
-              <img
-                src={item.src}
-                alt={item.title}
-                className="w-full object-cover transition-transform duration-500 group-hover:scale-105"
-              />
+              <div className="relative aspect-4/5 w-full overflow-hidden">
+                <img
+                  src={item.src}
+                  alt={item.title}
+                  className="h-full w-full object-cover transition-transform duration-500 md:group-hover:scale-105"
+                />
 
-              <div className="absolute inset-0 bg-black/70 opacity-0 group-hover:opacity-100 transition flex flex-col justify-end p-4">
-                <Badge
-                  variant="secondary"
-                  className="w-fit mb-2 opacity-0 translate-y-2 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0"
-                >
+                <div className="pointer-events-none absolute inset-x-0 bottom-0 h-80 bg-linear-to-t from-black/80 via-black/40 to-transparent md:hidden" />
+              </div>
+
+              <div className="absolute inset-x-0 bottom-0 p-4 md:hidden">
+                <Badge variant="secondary" className="w-fit mb-2">
                   {CATEGORY_EMOJI[item.category]} {item.category}
                 </Badge>
 
-                <h3 className="font-semibold line-clamp-1">
-                  {CATEGORY_EMOJI[item.category]} {item.title}
+                <h3 className="font-semibold text-white line-clamp-1">
+                  {item.title}
                 </h3>
-                <p className="text-muted-foreground text-sm line-clamp-2">
+                <p className="text-white/80 text-sm line-clamp-2">
+                  {item.description}
+                </p>
+              </div>
+
+              <div className="absolute inset-0 hidden md:flex flex-col justify-end p-4 bg-black/60 opacity-0 group-hover:opacity-100 transition-all">
+                <Badge variant="secondary" className="w-fit mb-2">
+                  {CATEGORY_EMOJI[item.category]} {item.category}
+                </Badge>
+                <h3 className="font-semibold text-white line-clamp-1">
+                  {item.title}
+                </h3>
+                <p className="text-white/80 text-sm line-clamp-2">
                   {item.description}
                 </p>
               </div>
@@ -181,9 +194,9 @@ export default function GalleryPage() {
         onOpenChange={() => setActiveIndex(null)}
       >
         {activeIndex !== null && (
-          <DialogContent className="w-auto md:max-w-[95vw] p-0 overflow-hidden flex items-start">
-            <div className="inline-flex flex-col min-h-0">
-              <div className="relative inline-flex max-h-[75vh] overflow-hidden">
+          <DialogContent className="w-full max-w-full md:w-auto md:max-w-[95vw] max-h-[95vh] p-0 overflow-hidden flex justify-center">
+            <div className="flex flex-col min-h-0 md:inline-flex">
+              <div className="relative flex justify-center md:inline-flex max-h-[75vh] overflow-hidden">
                 <Image
                   src={filteredItems[activeIndex].src}
                   alt={filteredItems[activeIndex].title}
@@ -197,7 +210,7 @@ export default function GalleryPage() {
 
               <Separator />
 
-              <div className="relative px-6 py-5 flex flex-col gap-3 overflow-y-auto min-h-0 max-h-[30vh]">
+              <div className="relative w-full md:w-auto px-6 py-5 flex flex-col gap-3 overflow-y-auto min-h-0 max-h-[35vh]">
                 <BlurFade delay={BLUR_FADE_DELAY + 0.1}>
                   <Badge className="w-fit flex items-center gap-1">
                     {CATEGORY_EMOJI[filteredItems[activeIndex].category]}
