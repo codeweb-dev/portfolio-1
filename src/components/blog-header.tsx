@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { formatDate } from "@/lib/utils";
 import { DATA } from "@/data/resume";
+import { Badge } from "./ui/badge";
 
 type BlogHeaderProps = {
   title: string;
@@ -8,6 +9,7 @@ type BlogHeaderProps = {
   author?: string;
   image?: string;
   readingTime: string;
+  category?: string;
 };
 
 export function BlogHeader({
@@ -16,6 +18,7 @@ export function BlogHeader({
   author = DATA.name,
   image,
   readingTime,
+  category,
 }: BlogHeaderProps) {
   return (
     <header className="flex flex-col gap-6">
@@ -42,6 +45,12 @@ export function BlogHeader({
           <span>{formatDate(publishedAt)}</span>
           <span>·</span>
           <span>{readingTime}</span>
+          <span>·</span>
+          {category && (
+            <Badge variant="outline">
+              {category}
+            </Badge>
+          )}
         </div>
       </div>
 

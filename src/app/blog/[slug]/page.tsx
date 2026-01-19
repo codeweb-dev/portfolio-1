@@ -41,10 +41,11 @@ export async function generateMetadata({
     return undefined;
   }
 
-  let { title, publishedAt: publishedTime, summary: description, image } = post;
+  let { title, category, publishedAt: publishedTime, summary: description, image } = post;
 
   return {
     title,
+    category,
     description,
     openGraph: {
       title,
@@ -138,6 +139,7 @@ export default async function Blog({
       </div>
       <BlogHeader
         title={post.title}
+        category={post.category}
         publishedAt={post.publishedAt}
         author={post.author}
         image={post.image}
