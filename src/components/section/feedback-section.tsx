@@ -86,7 +86,7 @@ const ReviewCard = ({ name, username, message, rating }: Feedback) => {
         </div>
 
         <Badge variant="outline" className="flex items-center gap-1">
-          <Star className="size-3" />
+          <Star className="size-3 fill-yellow-400 text-yellow-400" />
           <span>{rating}</span>
         </Badge>
       </div>

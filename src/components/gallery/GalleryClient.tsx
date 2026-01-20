@@ -54,7 +54,7 @@ export default function GalleryClient() {
               key={category}
               variant={activeCategory === category ? "default" : "outline"}
               onClick={() => setActiveCategory(category as Category)}
-              className="cursor-pointer select-none"
+              className="cursor-pointer select-none capitalize"
             >
               {category}
             </Badge>

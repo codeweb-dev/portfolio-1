@@ -17,6 +17,17 @@ import Markdown from "react-markdown";
 import { DATA } from "@/data/resume";
 import Link from "next/link";
 
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import RoadmapSection from "@/components/section/roadmap-section";
+
 const BLUR_FADE_DELAY = 0.04;
 export const revalidate = 60;
 
@@ -68,14 +79,34 @@ export default async function Page() {
                   text={DATA.description}
                 />
                 <BlurFade delay={BLUR_FADE_DELAY}>
-                  <Link
-                    href="https://www.facebook.com/profile.php?id=61581024022869"
-                    target="_blank"
-                  >
-                    <InteractiveHoverButton>
-                      Let’s Work Together
-                    </InteractiveHoverButton>
-                  </Link>
+                  <div className="flex flex-col md:flex-row items-center md:gap-3 mt-3">
+                    <Link
+                      href="https://www.facebook.com/profile.php?id=61581024022869"
+                      target="_blank"
+                    >
+                      <InteractiveHoverButton>
+                        Let’s Work Together
+                      </InteractiveHoverButton>
+                    </Link>
+
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <Button variant="link">View updates & roadmap</Button>
+                      </DialogTrigger>
+
+                      <DialogContent className="max-w-2xl">
+                        <DialogHeader>
+                          <DialogTitle>Updates & Roadmap</DialogTitle>
+                          <DialogDescription>
+                            A transparent look at what’s live, what’s coming,
+                            and what’s being planned.
+                          </DialogDescription>
+                        </DialogHeader>
+
+                        <RoadmapSection />
+                      </DialogContent>
+                    </Dialog>
+                  </div>
                 </BlurFade>
               </div>
               <BlurFade delay={BLUR_FADE_DELAY} className="order-1 md:order-2">
