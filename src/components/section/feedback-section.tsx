@@ -4,6 +4,14 @@ import { cn } from "@/lib/utils";
 import { Marquee } from "@/components/ui/marquee";
 import { Button } from "@/components/ui/button";
 import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "@/components/ui/empty";
+import {
   Dialog,
   DialogContent,
   DialogDescription,
@@ -12,9 +20,15 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { BadgeQuestionMark, Sparkles, Star } from "lucide-react";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { HelpCircle, MessageCircleHeart, Sparkles, Star } from "lucide-react";
 import { RainbowButton } from "../ui/rainbow-button";
 import { Textarea } from "../ui/textarea";
 import { Switch } from "../ui/switch";
@@ -24,15 +38,20 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { useEffect, useState } from "react";
-import { useForm } from "@tanstack/react-form";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { feedbackSchema } from "@/lib/validators/feedback";
+import { z } from "zod";
+import { Input } from "../ui/input";
+import { Skeleton } from "../ui/skeleton";
 
 type Feedback = {
   _id: string;
   name?: string;
   username?: string;
   message: string;
+  rating?: number;
 };
 
 const ReviewCard = ({ name, username, message }: Feedback) => {
@@ -64,11 +83,16 @@ const ReviewCard = ({ name, username, message }: Feedback) => {
   );
 };
 
-const DialogForm = () => {
-  const [rating, setRating] = useState(0);
+const DialogForm = ({
+  onOptimisticAdd,
+}: {
+  onOptimisticAdd: (feedback: Feedback) => void;
+}) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [open, setOpen] = useState(false);
 
-  const form = useForm({
+  const form = useForm<z.infer<typeof feedbackSchema>>({
+    resolver: zodResolver(feedbackSchema),
     defaultValues: {
       name: "",
       username: "",
@@ -77,49 +101,55 @@ const DialogForm = () => {
       rating: 0,
       isAnonymous: false,
     },
-    validators: {
-      onSubmit: ({ value }) => {
-        const result = feedbackSchema.safeParse({
-          ...value,
-          rating,
-        });
-
-        if (!result.success) {
-          toast.error("Invalid form data");
-          return { form: "Invalid form data" };
-        }
-
-        return undefined;
-      },
-    },
-    onSubmit: async ({ value }) => {
-      try {
-        setIsSubmitting(true);
-
-        const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/feedback`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ ...value, rating }),
-        });
-
-        if (!res.ok) {
-          toast.error("Invalid access code or submission failed");
-          return;
-        }
-
-        toast.success("Thank you for your feedback 💙");
-        form.reset();
-        setRating(0);
-      } catch (error) {
-        toast.error("Something went wrong. Please try again.");
-      } finally {
-        setIsSubmitting(false);
-      }
-    },
+    mode: "onChange",
   });
 
+  const isAnonymous = form.watch("isAnonymous");
+  const rating = form.watch("rating");
+  const messageLength = form.watch("message").length;
+
+  const onSubmit = async (values: z.infer<typeof feedbackSchema>) => {
+    try {
+      setIsSubmitting(true);
+
+      // Create optimistic feedback
+      const optimisticFeedback: Feedback = {
+        _id: `temp-${Date.now()}`,
+        name: values.isAnonymous ? undefined : values.name,
+        username: values.isAnonymous ? undefined : values.username,
+        message: values.message,
+        rating: values.rating,
+      };
+
+      // Add optimistically
+      onOptimisticAdd(optimisticFeedback);
+
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_SITE_URL}/api/feedback`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(values),
+        },
+      );
+
+      if (!res.ok) {
+        toast.error("Invalid access code or submission failed");
+        return;
+      }
+
+      toast.success("Thank you for your feedback 💙");
+      form.reset();
+      setOpen(false);
+    } catch (error) {
+      toast.error("Something went wrong. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <RainbowButton>
           Rate Me <Sparkles className="size-4" />
@@ -127,13 +157,7 @@ const DialogForm = () => {
       </DialogTrigger>
 
       <DialogContent className="sm:max-w-lg">
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            form.handleSubmit();
-          }}
-          className="grid gap-6"
-        >
+        <div className="grid gap-6">
           <DialogHeader>
             <DialogTitle>Your Feedback Matters</DialogTitle>
             <DialogDescription>
@@ -141,131 +165,211 @@ const DialogForm = () => {
             </DialogDescription>
           </DialogHeader>
 
-          {/* Anonymous */}
-          <form.Field name="isAnonymous">
-            {(field) => (
-              <div className="flex items-center gap-2">
-                <Switch
-                  checked={field.state.value}
-                  onCheckedChange={field.handleChange}
-                />
-                <Label>Anonymous</Label>
-              </div>
-            )}
-          </form.Field>
-
-          {/* Name / Username */}
-          {!form.state.values.isAnonymous && (
-            <div className="flex gap-4">
-              <form.Field name="name">
-                {(field) => (
-                  <div className="grid gap-1 flex-1">
-                    <Label>Name</Label>
-                    <Input
-                      value={field.state.value}
-                      onChange={(e) => field.handleChange(e.target.value)}
-                      onBlur={field.handleBlur}
-                    />
+          {/* Anonymous Toggle */}
+          <Form {...form}>
+            <FormField
+              control={form.control}
+              name="isAnonymous"
+              render={({ field }) => (
+                <FormItem>
+                  <div className="flex items-center gap-2">
+                    <FormControl>
+                      <Switch
+                        checked={field.value}
+                        onCheckedChange={(checked) => {
+                          field.onChange(checked);
+                          if (checked) {
+                            form.setValue("name", "");
+                            form.setValue("username", "");
+                          }
+                        }}
+                      />
+                    </FormControl>
+                    <FormLabel className="mt-0!">Anonymous</FormLabel>
                   </div>
-                )}
-              </form.Field>
+                </FormItem>
+              )}
+            />
 
-              <form.Field name="username">
-                {(field) => (
-                  <div className="grid gap-1 flex-1">
-                    <Label>Username</Label>
-                    <Input
-                      value={field.state.value}
-                      onChange={(e) => field.handleChange(e.target.value)}
-                      onBlur={field.handleBlur}
-                    />
-                  </div>
-                )}
-              </form.Field>
-            </div>
-          )}
-
-          {/* Access Code */}
-          <form.Field name="accessCode">
-            {(field) => (
-              <div className="grid gap-1">
-                <Label>Access Code</Label>
-                <div className="flex gap-2">
-                  <Input
-                    type="password"
-                    value={field.state.value}
-                    onChange={(e) => field.handleChange(e.target.value)}
-                    onBlur={field.handleBlur}
-                  />
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <Button size="icon" variant="outline">
-                        <BadgeQuestionMark className="size-4" />
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="text-sm">
-                      Use the code provided by the owner 🔑
-                    </PopoverContent>
-                  </Popover>
-                </div>
-              </div>
-            )}
-          </form.Field>
-
-          {/* Message */}
-          <form.Field name="message">
-            {(field) => (
-              <div className="grid gap-1">
-                <Label>Message</Label>
-                <Textarea
-                  rows={4}
-                  value={field.state.value}
-                  onChange={(e) => field.handleChange(e.target.value)}
-                  onBlur={field.handleBlur}
-                />
-              </div>
-            )}
-          </form.Field>
-
-          {/* Rating */}
-          <div className="flex gap-2">
-            {[1, 2, 3, 4, 5].map((star) => (
-              <Star
-                key={star}
-                onClick={() => setRating(star)}
-                className={cn(
-                  "cursor-pointer",
-                  star <= rating && "text-yellow-500",
-                )}
-              />
-            ))}
-          </div>
-
-          <DialogFooter>
-            <Button
-              type="submit"
-              disabled={
-                isSubmitting || rating === 0 || !!form.state.errors.length
-              }
+            {/* Name / Username with animation */}
+            <div
+              className={cn(
+                "overflow-hidden transition-all duration-300 ease-in-out",
+                isAnonymous
+                  ? "max-h-0 opacity-0 hidden"
+                  : "max-h-50 opacity-100",
+              )}
             >
-              {isSubmitting ? "Submitting..." : "Submit Feedback"}
-            </Button>
-          </DialogFooter>
-        </form>
+              <div className="flex gap-4">
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem className="flex-1">
+                      <FormLabel>Name</FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          disabled={isAnonymous}
+                          placeholder="John Doe"
+                        />
+                      </FormControl>
+                      <FormMessage className="text-muted-foreground text-xs" />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="username"
+                  render={({ field }) => (
+                    <FormItem className="flex-1">
+                      <FormLabel>Username</FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          disabled={isAnonymous}
+                          placeholder="@johndoe"
+                        />
+                      </FormControl>
+                      <FormMessage className="text-muted-foreground text-xs" />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </div>
+
+            {/* Access Code */}
+            <FormField
+              control={form.control}
+              name="accessCode"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Access Code</FormLabel>
+                  <div className="flex gap-2">
+                    <FormControl>
+                      <Input type="password" {...field} />
+                    </FormControl>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button size="icon" variant="outline" type="button">
+                          <HelpCircle className="size-4" />
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="text-sm">
+                        Use the code provided by the owner 🔑
+                      </PopoverContent>
+                    </Popover>
+                  </div>
+                  <FormMessage className="text-muted-foreground text-xs" />
+                </FormItem>
+              )}
+            />
+
+            {/* Message */}
+            <FormField
+              control={form.control}
+              name="message"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Message</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      rows={4}
+                      placeholder="Share your experience..."
+                      {...field}
+                    />
+                  </FormControl>
+                  <div className="flex justify-between items-center">
+                    <FormMessage className="text-muted-foreground text-xs" />
+                    <p className="text-xs text-muted-foreground">
+                      {messageLength}/1000 characters
+                    </p>
+                  </div>
+                </FormItem>
+              )}
+            />
+
+            {/* Rating */}
+            <FormField
+              control={form.control}
+              name="rating"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Rating</FormLabel>
+                  <FormControl>
+                    <div className="flex gap-2">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <Star
+                          key={star}
+                          onClick={() => field.onChange(star)}
+                          className={cn(
+                            "cursor-pointer transition-all hover:scale-110",
+                            star <= field.value &&
+                              "text-yellow-500 fill-yellow-500",
+                          )}
+                        />
+                      ))}
+                    </div>
+                  </FormControl>
+                  <FormMessage className="text-muted-foreground text-xs" />
+                </FormItem>
+              )}
+            />
+
+            <DialogFooter>
+              <Button
+                onClick={form.handleSubmit(onSubmit)}
+                disabled={isSubmitting || !form.formState.isValid}
+              >
+                {isSubmitting ? "Submitting..." : "Submit Feedback"}
+              </Button>
+            </DialogFooter>
+          </Form>
+        </div>
       </DialogContent>
     </Dialog>
   );
 };
 
+const ReviewCardSkeleton = () => (
+  <div className="h-full w-64 rounded-xl border p-4 bg-muted/30">
+    <div className="flex items-center gap-2">
+      <Skeleton className="h-8 w-8 rounded-full" />
+      <div className="space-y-1">
+        <Skeleton className="h-3 w-24" />
+        <Skeleton className="h-3 w-16" />
+      </div>
+    </div>
+
+    <div className="mt-3 space-y-2">
+      <Skeleton className="h-3 w-full" />
+      <Skeleton className="h-3 w-5/6" />
+      <Skeleton className="h-3 w-4/6" />
+    </div>
+  </div>
+);
+
 export function FeedbackSection() {
   const [reviews, setReviews] = useState<Feedback[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    fetch("/api/feedback")
+    fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/feedback`)
       .then((res) => res.json())
-      .then(setReviews)
-      .catch(console.error);
+      .then((data) => {
+        setReviews(data);
+        setIsLoading(false);
+      })
+      .catch((error) => {
+        console.error(error);
+        setIsLoading(false);
+      });
   }, []);
+
+  const handleOptimisticAdd = (feedback: Feedback) => {
+    setReviews((prev) => [feedback, ...prev]);
+  };
 
   const mid = Math.ceil(reviews.length / 2);
   const firstRow = reviews.slice(0, mid);
@@ -281,23 +385,57 @@ export function FeedbackSection() {
           </p>
         </div>
 
-        <div className="relative overflow-hidden">
-          <Marquee pauseOnHover>
-            {firstRow.map((review) => (
-              <ReviewCard key={review._id} {...review} />
-            ))}
-          </Marquee>
+        {isLoading ? (
+          <div className="relative overflow-hidden">
+            <Marquee pauseOnHover>
+              {Array.from({ length: 6 }).map((_, i) => (
+                <ReviewCardSkeleton key={i} />
+              ))}
+            </Marquee>
 
-          <Marquee reverse pauseOnHover>
-            {secondRow.map((review) => (
-              <ReviewCard key={review._id} {...review} />
-            ))}
-          </Marquee>
-        </div>
+            <Marquee reverse pauseOnHover>
+              {Array.from({ length: 6 }).map((_, i) => (
+                <ReviewCardSkeleton key={i} />
+              ))}
+            </Marquee>
+          </div>
+        ) : reviews.length === 0 ? (
+          <Empty>
+            <EmptyHeader>
+              <EmptyMedia variant="icon">
+                <MessageCircleHeart />
+              </EmptyMedia>
+              <EmptyTitle>No Feedback</EmptyTitle>
+              <EmptyDescription>
+                You&apos;re all caught up. New feedback will appear here. Be the
+                first to leave feedback using the button below!
+              </EmptyDescription>
+            </EmptyHeader>
+            <EmptyContent>
+              <DialogForm onOptimisticAdd={handleOptimisticAdd} />
+            </EmptyContent>
+          </Empty>
+        ) : (
+          <div className="relative overflow-hidden">
+            <Marquee pauseOnHover>
+              {firstRow.map((review) => (
+                <ReviewCard key={review._id} {...review} />
+              ))}
+            </Marquee>
 
-        <div className="flex justify-center">
-          <DialogForm />
-        </div>
+            <Marquee reverse pauseOnHover>
+              {secondRow.map((review) => (
+                <ReviewCard key={review._id} {...review} />
+              ))}
+            </Marquee>
+          </div>
+        )}
+
+        {reviews.length !== 0 && (
+          <div className="flex justify-center">
+            <DialogForm onOptimisticAdd={handleOptimisticAdd} />
+          </div>
+        )}
       </div>
     </section>
   );

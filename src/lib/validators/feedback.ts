@@ -20,7 +20,7 @@ export const feedbackSchema = z
       data.isAnonymous ||
       (!!data.name?.trim() && !!data.username?.trim()),
     {
-      message: "Name and username are required unless anonymous",
-      path: ["name"],
+      message: "Name & username are required unless anonymous",
+      path: ["name", "username"],
     }
   );
