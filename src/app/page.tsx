@@ -1,29 +1,23 @@
 /* eslint-disable @next/next/no-img-element */
-import BlurFade from "@/components/magicui/blur-fade";
-import BlurFadeText from "@/components/magicui/blur-fade-text";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { DATA } from "@/data/resume";
-import Link from "next/link";
-import Markdown from "react-markdown";
-import ContactSection from "@/components/section/contact-section";
-import ProjectsSection from "@/components/section/projects-section";
-import { ArrowUpRight, Eye, Heart, Star } from "lucide-react";
 import { InteractiveHoverButton } from "@/components/ui/interactive-hover-button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { FeedbackSection } from "@/components/section/feedback-section";
+import ProjectsSection from "@/components/section/projects-section";
+import ContactSection from "@/components/section/contact-section";
+import BlurFadeText from "@/components/magicui/blur-fade-text";
 import { SpinningText } from "@/components/ui/spinning-text";
-import { Badge } from "@/components/ui/badge";
+import { ArrowUpRight, Eye, Star } from "lucide-react";
+import BlurFade from "@/components/magicui/blur-fade";
 import RegisterView from "@/components/RegisterView";
 import HeartButton from "@/components/HeartButton";
+import { Badge } from "@/components/ui/badge";
+import { getStats } from "@/lib/stats";
+import Markdown from "react-markdown";
+import { DATA } from "@/data/resume";
+import Link from "next/link";
 
 const BLUR_FADE_DELAY = 0.04;
-
-async function getStats(slug: string) {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_SITE_URL}/api/stats?slug=${slug}`,
-    { cache: "no-store" },
-  );
-  return res.json();
-}
+export const revalidate = 60;
 
 export default async function Page() {
   const stats = await getStats("home");
@@ -49,10 +43,7 @@ export default async function Page() {
                       4.5 Ratings
                     </Badge>
 
-                    <HeartButton
-                      slug="home"
-                      initialHearts={stats.hearts}
-                    />
+                    <HeartButton slug="home" initialHearts={stats.hearts} />
                   </div>
                 </BlurFade>
                 <BlurFadeText
@@ -128,16 +119,6 @@ export default async function Page() {
             </div>
           </div>
         </section>
-        {/* <section id="work">
-        <div className="flex min-h-0 flex-col gap-y-6">
-          <BlurFade delay={BLUR_FADE_DELAY * 5}>
-            <h2 className="text-xl font-bold">Work Experience</h2>
-          </BlurFade>
-          <BlurFade delay={BLUR_FADE_DELAY * 6}>
-            <WorkSection />
-          </BlurFade>
-        </div>
-      </section> */}
         <section id="education">
           <div className="flex min-h-0 flex-col gap-y-6">
             <BlurFade delay={BLUR_FADE_DELAY * 7}>
@@ -199,11 +180,6 @@ export default async function Page() {
             <FeedbackSection />
           </BlurFade>
         </section>
-        {/* <section id="hackathons">
-        <BlurFade delay={BLUR_FADE_DELAY * 13}>
-          <HackathonsSection />
-        </BlurFade>
-      </section> */}
         <section id="contact">
           <BlurFade delay={BLUR_FADE_DELAY * 16}>
             <ContactSection />
