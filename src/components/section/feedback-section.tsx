@@ -46,6 +46,7 @@ import { z } from "zod";
 import { Input } from "../ui/input";
 import { Skeleton } from "../ui/skeleton";
 import { fireSideCannons } from "@/lib/confetti-side-cannons";
+import { Badge } from "../ui/badge";
 
 type Feedback = {
   _id: string;
@@ -55,9 +56,9 @@ type Feedback = {
   rating?: number;
 };
 
-const ReviewCard = ({ name, username, message }: Feedback) => {
+const ReviewCard = ({ name, username, message, rating }: Feedback) => {
   const displayName = name || "Anonymous";
-  const displayUsername = username || "@client";
+  const displayUsername = username || "@anonymous";
 
   return (
     <figure
@@ -69,16 +70,22 @@ const ReviewCard = ({ name, username, message }: Feedback) => {
       <div className="flex items-center gap-2">
         <img
           src={`https://avatar.vercel.sh/${displayName}`}
-          alt=""
+          alt={displayName}
           width={32}
           height={32}
           className="rounded-full"
         />
-        <div>
-          <figcaption className="text-sm font-medium">{displayName}</figcaption>
-          <p className="text-xs text-muted-foreground">{displayUsername}</p>
+        <div className="flex-1">
+          <figcaption className="text-sm font-medium line-clamp-1">{displayName}</figcaption>
+          <p className="text-xs text-muted-foreground line-clamp-1">{displayUsername}</p>
         </div>
+
+        <Badge variant="outline" className="flex items-center gap-1">
+          <Star className="size-3" />
+          <span>{rating}</span>
+        </Badge>
       </div>
+
       <blockquote className="mt-2 text-sm">{message}</blockquote>
     </figure>
   );
