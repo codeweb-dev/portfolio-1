@@ -109,7 +109,7 @@ export default async function Image() {
     const fontData = await getFontData();
     const title = "Blog";
     const description = "Thoughts on software development, life, and more.";
-    const imageUrl = undefined;
+    const imageUrl = "https://allen-labrague-portfolio.vercel.app/allen.png";
 
     return new ImageResponse(
       <div style={styles.outerWrapper}>

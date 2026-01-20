@@ -107,7 +107,7 @@ const styles = {
 export default async function Image() {
   try {
     const fontData = await getFontData();
-    const imageUrl = undefined;
+    const imageUrl = "https://allen-labrague-portfolio.vercel.app/allen.png";
 
     return new ImageResponse(
       <div style={styles.outerWrapper}>

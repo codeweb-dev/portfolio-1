@@ -1,10 +1,8 @@
 import { ImageResponse } from "next/og";
-import { allPosts } from "content-collections";
-import { DATA } from "@/data/resume";
 import fs from "fs/promises";
 import path from "path";
 
-export const alt = "Blog Post";
+export const alt = "Gallery";
 export const size = {
   width: 1200,
   height: 630,
@@ -100,74 +98,17 @@ const styles = {
     textAlign: "left",
     maxWidth: "800px",
     color: "#404040",
-    marginBottom: "16px",
-    textWrap: "balance",
-  },
-  date: {
-    fontSize: "16px",
-    fontWeight: "400",
-    lineHeight: "1.5",
-    textAlign: "left",
-    color: "#666666",
     marginBottom: "32px",
+    textWrap: "balance",
   },
 } as const;
 
-export default async function Image({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
+export default async function Image() {
   try {
     const fontData = await getFontData();
-    const { slug } = await params;
-    const post = allPosts.find(
-      (p) => p._meta.path.replace(/\.mdx$/, "") === slug,
-    );
+    const title = "Gallery";
+    const description = "A collection of visual stories and moments.";
     const imageUrl = "https://allen-labrague-portfolio.vercel.app/allen.png";
-
-    if (!post) {
-      return new ImageResponse(
-        <div style={styles.outerWrapper}>
-          <div style={styles.middleWrapper}>
-            <div style={styles.wrapper}>
-              {imageUrl && (
-                <div style={styles.imageSection}>
-                  <img src={imageUrl} alt="Blog Post" style={styles.image} />
-                </div>
-              )}
-              <div style={styles.mainContainer}>
-                <div style={styles.title}>Post Not Found</div>
-              </div>
-            </div>
-          </div>
-        </div>,
-        {
-          ...size,
-          fonts: fontData
-            ? [
-                {
-                  name: "Clash Display",
-                  data: fontData.clashDisplay,
-                  weight: 600,
-                  style: "normal",
-                },
-              ]
-            : undefined,
-        },
-      );
-    }
-
-    const title = post.title;
-    const description = post.summary || "";
-    const publishedDate = post.publishedAt
-      ? new Date(post.publishedAt).toLocaleDateString("en-US", {
-          year: "numeric",
-          month: "long",
-          day: "numeric",
-          timeZone: "UTC",
-        })
-      : "";
 
     return new ImageResponse(
       <div style={styles.outerWrapper}>
@@ -175,7 +116,7 @@ export default async function Image({
           <div style={styles.wrapper}>
             {imageUrl && (
               <div style={styles.imageSection}>
-                <img src={imageUrl} alt={title} style={styles.image} />
+                <img src={imageUrl} alt="Gallery" style={styles.image} />
               </div>
             )}
             <div style={styles.mainContainer}>
@@ -183,7 +124,6 @@ export default async function Image({
               {description && (
                 <div style={styles.description}>{description}</div>
               )}
-              {publishedDate && <div style={styles.date}>{publishedDate}</div>}
             </div>
           </div>
         </div>
