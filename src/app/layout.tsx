@@ -7,6 +7,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { FlickeringGrid } from "@/components/magicui/flickering-grid";
+import { Toaster } from "@/components/ui/sonner"
 
 const geist = Geist({
   subsets: ["latin"],
@@ -89,6 +90,8 @@ export default function RootLayout({
             <Navbar />
           </TooltipProvider>
         </ThemeProvider>
+
+        <Toaster />
       </body>
     </html>
   );

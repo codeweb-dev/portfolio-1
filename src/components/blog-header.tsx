@@ -41,13 +41,13 @@ export function BlogHeader({
             <span>{author}</span>
           </div>
 
-          <div className="hidden md:inline">
+          <div className="hidden md:inline-flex items-center gap-3">
             <span>·</span>
             <span>{formatDate(publishedAt)}</span>
           </div>
           <span>·</span>
           <span>{readingTime}</span>
-          <div className="hidden md:inline">
+          <div className="hidden md:inline-flex items-center gap-3">
             <span>·</span>
             {category && <Badge variant="outline">{category}</Badge>}
           </div>
