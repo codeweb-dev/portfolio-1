@@ -16,10 +16,6 @@ const PageStatSchema = new mongoose.Schema(
       default: 0,
       min: 0,
     },
-    // ratings: {
-    //   type: Number,
-    //   default: 0, // for future use
-    // },
   },
   { timestamps: true },
 );
