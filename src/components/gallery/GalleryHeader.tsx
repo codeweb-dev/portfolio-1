@@ -10,9 +10,10 @@ type Props = {
     views: number;
     hearts: number;
   };
+  totalItems: number;
 };
 
-export default function GalleryHeader({ stats }: Props) {
+export default function GalleryHeader({ stats, totalItems }: Props) {
   return (
     <section className="flex flex-col gap-3">
       <BlurFade delay={BLUR_FADE_DELAY}>
@@ -28,7 +29,10 @@ export default function GalleryHeader({ stats }: Props) {
 
       <BlurFade delay={BLUR_FADE_DELAY}>
         <h1 className="text-2xl font-semibold tracking-tight mb-2">
-          Gallery
+          Gallery{" "}
+          <span className="ml-1 bg-card border border-border rounded-md px-2 py-1 text-muted-foreground text-sm">
+            {totalItems} photos
+          </span>
         </h1>
         <p className="text-sm text-muted-foreground mb-8">
           Travel memories, quiet moments, and visual stories.
