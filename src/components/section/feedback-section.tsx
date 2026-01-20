@@ -45,6 +45,7 @@ import { feedbackSchema } from "@/lib/validators/feedback";
 import { z } from "zod";
 import { Input } from "../ui/input";
 import { Skeleton } from "../ui/skeleton";
+import { fireSideCannons } from "@/lib/confetti-side-cannons";
 
 type Feedback = {
   _id: string;
@@ -139,6 +140,7 @@ const DialogForm = ({
       }
 
       toast.success("Thank you for your feedback 💙");
+      fireSideCannons();
       form.reset();
       setOpen(false);
     } catch (error) {
@@ -211,7 +213,7 @@ const DialogForm = ({
                         <Input
                           {...field}
                           disabled={isAnonymous}
-                          placeholder="John Doe"
+                          placeholder="Allen Labrague"
                         />
                       </FormControl>
                       <FormMessage className="text-muted-foreground text-xs" />
@@ -229,7 +231,7 @@ const DialogForm = ({
                         <Input
                           {...field}
                           disabled={isAnonymous}
-                          placeholder="@johndoe"
+                          placeholder="@allenlabrague"
                         />
                       </FormControl>
                       <FormMessage className="text-muted-foreground text-xs" />
@@ -377,12 +379,26 @@ export function FeedbackSection() {
 
   return (
     <section id="feedback">
-      <div className="flex flex-col gap-y-10">
-        <div className="text-center space-y-2">
-          <h2 className="text-3xl font-bold">What clients say</h2>
-          <p className="text-muted-foreground max-w-xl mx-auto">
-            Real feedback from real clients.
-          </p>
+      <div className="flex min-h-0 flex-col gap-y-8">
+        <div className="flex flex-col gap-y-4 items-center justify-center">
+          <div className="flex items-center w-full">
+            <div className="flex-1 h-px bg-linear-to-r from-transparent from-5% via-border via-95% to-transparent" />
+            <div className="border bg-primary z-10 rounded-xl px-4 py-1">
+              <span className="text-background text-sm font-medium">
+                Feedback
+              </span>
+            </div>
+            <div className="flex-1 h-px bg-linear-to-l from-transparent from-5% via-border via-95% to-transparent" />
+          </div>
+          <div className="flex flex-col gap-y-3 items-center justify-center">
+            <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl">
+              What clients say
+            </h2>
+            <p className="text-muted-foreground md:text-lg/relaxed lg:text-base/relaxed xl:text-lg/relaxed text-balance text-center">
+              See what clients think about working with me and the results we
+              achieved together.
+            </p>
+          </div>
         </div>
 
         {isLoading ? (
@@ -431,11 +447,26 @@ export function FeedbackSection() {
           </div>
         )}
 
-        {reviews.length !== 0 && (
-          <div className="flex justify-center">
-            <DialogForm onOptimisticAdd={handleOptimisticAdd} />
-          </div>
-        )}
+        <div className="flex items-center justify-center gap-2">
+          {reviews.length !== 0 && (
+            <div className="flex justify-center">
+              <DialogForm onOptimisticAdd={handleOptimisticAdd} />
+            </div>
+          )}
+
+          <Button
+            variant="link"
+            className="text-sm"
+            onClick={() =>
+              toast.info("Feedback still in progress🫶!", {
+                description:
+                  "The full feedback page is coming soon. Stay tuned!, Check the roadmap for updates.🥰",
+              })
+            }
+          >
+            View feedback
+          </Button>
+        </div>
       </div>
     </section>
   );
