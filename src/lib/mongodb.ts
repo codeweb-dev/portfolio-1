@@ -1,19 +1,30 @@
 import mongoose from "mongoose";
 
-const MONGODB_URI = process.env.MONGODB_URI;
+const uri = process.env.MONGODB_URI;
 
-if (!MONGODB_URI) {
-  throw new Error("Please define MONGODB_URI in .env.local");
+if (!uri) {
+  throw new Error("❌ Please define MONGODB_URI in .env.local");
 }
 
-let cached = (global as any).mongoose;
+const MONGODB_URI: string = uri;
 
-if (!cached) {
-  cached = (global as any).mongoose = { conn: null, promise: null };
+interface MongooseCache {
+  conn: typeof mongoose | null;
+  promise: Promise<typeof mongoose> | null;
 }
+
+declare global {
+  // eslint-disable-next-line no-var
+  var mongoose: MongooseCache | undefined;
+}
+
+const cached: MongooseCache =
+  global.mongoose ?? (global.mongoose = { conn: null, promise: null });
 
 export default async function dbConnect() {
-  if (cached.conn) return cached.conn;
+  if (cached.conn) {
+    return cached.conn;
+  }
 
   if (!cached.promise) {
     cached.promise = mongoose.connect(MONGODB_URI).then((mongoose) => mongoose);
