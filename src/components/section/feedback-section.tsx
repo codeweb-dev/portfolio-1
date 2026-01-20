@@ -258,8 +258,32 @@ const DialogForm = ({
                           <HelpCircle className="size-4" />
                         </Button>
                       </PopoverTrigger>
-                      <PopoverContent className="text-sm">
-                        Use the code provided by the owner 🔑
+                      <PopoverContent className="text-sm space-y-3 max-w-xs">
+                        <div>
+                          <p className="font-medium">Why is this required?</p>
+                          <p className="text-muted-foreground text-xs">
+                            To protect the feedback form from anonymous spam or
+                            troll users.
+                          </p>
+                        </div>
+
+                        <div>
+                          <p className="font-medium">What is an access code?</p>
+                          <p className="text-muted-foreground text-xs">
+                            A code provided by the owner that allows clients to
+                            submit feedback.
+                          </p>
+                        </div>
+
+                        <div>
+                          <p className="font-medium">
+                            Do I need to use my real information?
+                          </p>
+                          <p className="text-muted-foreground text-xs">
+                            No. You can stay anonymous or use a nickname if you
+                            prefer.
+                          </p>
+                        </div>
                       </PopoverContent>
                     </Popover>
                   </div>
