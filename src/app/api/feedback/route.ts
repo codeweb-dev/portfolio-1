@@ -74,12 +74,24 @@ export async function GET() {
   try {
     await dbConnect();
 
-    const feedbacks = await Feedback.find()
-      .sort({ createdAt: -1 })
-      .limit(20)
-      .lean();
+    const feedbacks = await Feedback.find().lean();
 
-    return NextResponse.json(feedbacks);
+    const total = feedbacks.length;
+
+    const averageRating =
+      total === 0
+        ? 0
+        : (
+            feedbacks.reduce((sum, f) => sum + (f.rating || 0), 0) / total
+          ).toFixed(1);
+
+    return NextResponse.json({
+      feedbacks,
+      stats: {
+        total,
+        averageRating: Number(averageRating),
+      },
+    });
   } catch (error) {
     console.error("GET /feedback error:", error);
     return NextResponse.json(
@@ -88,3 +100,4 @@ export async function GET() {
     );
   }
 }
+

@@ -54,6 +54,7 @@ type Feedback = {
   username?: string;
   message: string;
   rating?: number;
+  createdAt?: any;
 };
 
 const ReviewCard = ({ name, username, message, rating }: Feedback) => {
@@ -76,8 +77,12 @@ const ReviewCard = ({ name, username, message, rating }: Feedback) => {
           className="rounded-full"
         />
         <div className="flex-1">
-          <figcaption className="text-sm font-medium line-clamp-1">{displayName}</figcaption>
-          <p className="text-xs text-muted-foreground line-clamp-1">{displayUsername}</p>
+          <figcaption className="text-sm font-medium line-clamp-1">
+            {displayName}
+          </figcaption>
+          <p className="text-xs text-muted-foreground line-clamp-1">
+            {displayUsername}
+          </p>
         </div>
 
         <Badge variant="outline" className="flex items-center gap-1">
@@ -391,7 +396,7 @@ export function FeedbackSection() {
     fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/feedback`)
       .then((res) => res.json())
       .then((data) => {
-        setReviews(data);
+        setReviews(data.feedbacks ?? []);
         setIsLoading(false);
       })
       .catch((error) => {
@@ -404,9 +409,19 @@ export function FeedbackSection() {
     setReviews((prev) => [feedback, ...prev]);
   };
 
-  const mid = Math.ceil(reviews.length / 2);
-  const firstRow = reviews.slice(0, mid);
-  const secondRow = reviews.slice(mid);
+  const MAX_REVIEWS = 6;
+
+  const sortedReviews = [...reviews]
+    .sort(
+      (a, b) =>
+        new Date(b.createdAt ?? 0).getTime() -
+        new Date(a.createdAt ?? 0).getTime(),
+    )
+    .slice(0, MAX_REVIEWS);
+
+  const mid = Math.ceil(sortedReviews.length / 2);
+  const firstRow = sortedReviews.slice(0, mid);
+  const secondRow = sortedReviews.slice(mid);
 
   return (
     <section id="feedback">

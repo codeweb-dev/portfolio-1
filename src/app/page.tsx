@@ -6,6 +6,7 @@ import ProjectsSection from "@/components/section/projects-section";
 import ContactSection from "@/components/section/contact-section";
 import BlurFadeText from "@/components/magicui/blur-fade-text";
 import { SpinningText } from "@/components/ui/spinning-text";
+import { getFeedbackStats } from "@/lib/feedback-stats";
 import { ArrowUpRight, Eye, Star } from "lucide-react";
 import BlurFade from "@/components/magicui/blur-fade";
 import RegisterView from "@/components/RegisterView";
@@ -21,6 +22,7 @@ export const revalidate = 60;
 
 export default async function Page() {
   const stats = await getStats("home");
+  const feedbackStats = await getFeedbackStats();
 
   return (
     <>
@@ -38,9 +40,17 @@ export default async function Page() {
                       {stats.views.toLocaleString()} Profile Views
                     </Badge>
 
-                    <Badge variant="outline">
-                      <Star className="size-3.5 mr-2" />
-                      4.5 Ratings
+                    <Badge
+                      variant="outline"
+                      className="flex items-center gap-1"
+                    >
+                      <Star className="size-3.5 fill-yellow-400 text-yellow-400" />
+                      <span className="font-medium">
+                        {feedbackStats.averageRating}
+                      </span>
+                      <span className="text-muted-foreground">
+                        ({feedbackStats.total})
+                      </span>
                     </Badge>
 
                     <HeartButton slug="home" initialHearts={stats.hearts} />
