@@ -9,6 +9,7 @@ import "./globals.css";
 import { FlickeringGrid } from "@/components/magicui/flickering-grid";
 import { Toaster } from "@/components/ui/sonner";
 import { Analytics } from "@vercel/analytics/next";
+import { TopLoader } from "@/components/top-loader";
 
 const geist = Geist({
   subsets: ["latin"],
@@ -72,6 +73,7 @@ export default function RootLayout({
           geistMono.variable,
         )}
       >
+        <TopLoader />
         <ThemeProvider attribute="class" defaultTheme="light">
           <TooltipProvider delayDuration={0}>
             <div className="absolute inset-0 top-0 left-0 right-0 h-25 overflow-hidden z-0">
