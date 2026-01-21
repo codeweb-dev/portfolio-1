@@ -62,44 +62,44 @@ export default function GalleryClient() {
         </section>
       </BlurFade>
 
-      <section className="columns-1 md:columns-2 gap-6 space-y-6">
+      <section className="columns-1 md:columns-2 gap-6">
         {filteredItems.map((item, index) => (
           <BlurFade key={item.src} delay={BLUR_FADE_DELAY * 3 + index * 0.05}>
             <div
               onClick={() => setActiveIndex(index)}
-              className="group relative cursor-pointer overflow-hidden rounded-xl border bg-background shadow-sm"
+              className="group mb-6 break-inside-avoid cursor-pointer overflow-hidden rounded-xl border bg-background shadow-sm transition hover:shadow-md"
             >
-              <div className="relative aspect-4/5 w-full overflow-hidden">
+              <div className="relative w-full overflow-hidden">
                 <img
                   src={item.src}
                   alt={item.title}
                   loading="lazy"
-                  className="h-full w-full object-cover transition-transform duration-500 md:group-hover:scale-105"
+                  className="w-full h-auto object-cover transition-transform duration-500 group-hover:scale-105"
                 />
 
-                <div className="pointer-events-none absolute inset-x-0 bottom-0 h-80 bg-linear-to-t from-black/80 via-black/40 to-transparent md:hidden" />
+                <div className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-linear-to-t from-black/80 via-black/40 to-transparent md:hidden" />
               </div>
 
               <div className="absolute inset-x-0 bottom-0 p-4 md:hidden">
-                <Badge variant="secondary" className="w-fit mb-2">
+                <Badge variant="secondary" className="mb-2 w-fit">
                   {CATEGORY_EMOJI[item.category]} {item.category}
                 </Badge>
                 <h3 className="font-semibold text-white line-clamp-1">
                   {item.title}
                 </h3>
-                <p className="text-white/80 text-sm line-clamp-2">
+                <p className="text-sm text-white/80 line-clamp-2">
                   {item.description}
                 </p>
               </div>
 
-              <div className="absolute inset-0 hidden md:flex flex-col justify-end p-4 bg-black/60 opacity-0 group-hover:opacity-100 transition-all">
-                <Badge variant="secondary" className="w-fit mb-2">
+              <div className="absolute inset-0 hidden md:flex flex-col justify-end p-4 bg-black/60 opacity-0 group-hover:opacity-100 transition">
+                <Badge variant="secondary" className="mb-2 w-fit">
                   {CATEGORY_EMOJI[item.category]} {item.category}
                 </Badge>
                 <h3 className="font-semibold text-white line-clamp-1">
                   {item.title}
                 </h3>
-                <p className="text-white/80 text-sm line-clamp-2">
+                <p className="text-sm text-white/80 line-clamp-2">
                   {item.description}
                 </p>
               </div>
